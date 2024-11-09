@@ -1,0 +1,63 @@
+extends Node2D
+
+const almond = preload("res://almond.tscn")
+const coffee = preload("res://coffee.tscn")
+const hazelnut = preload("res://hazelnut.tscn")
+const macadamia = preload("res://macadamia.tscn")
+const nutmeg = preload("res://nutmeg.tscn")
+const peacun = preload("res://peacun.tscn")
+
+"""
+@onready var almond = get_node("almond")
+@onready var coffee = get_node("coffee")
+@onready var hazelnut = get_node("hazelnut")
+@onready var macadamia = get_node("macadamia nuts")
+@onready var nutmeg = get_node("nutmeg")
+@onready var peacun = get_node("peacun")
+"""
+
+var rng = RandomNumberGenerator.new()
+var sprite = null
+var nut_no = rng.randi_range(1,6)
+
+var nuts = {1 : almond,
+			2 : coffee,
+			3 : hazelnut,
+			4 : macadamia,
+			5 : nutmeg,
+			6 : peacun}
+
+func _delete_preview():
+	sprite.queue_free()
+	sprite = null
+
+func _preview(a):
+	if sprite:
+		_delete_preview()
+	var nut = nuts[a].instantiate()
+	var og_sprite = nut.get_node("Sprite2D")
+	sprite = og_sprite.duplicate()
+	sprite.position = %preview.position
+	get_parent().add_child(sprite)
+
+func _physics_process(delta):
+	_preview(nut_no)
+	
+	if Input.is_action_just_pressed("drop"):
+		print("drop the nut")
+		
+		var nut = nuts[nut_no]
+		var drop = nut.instantiate()
+		
+		var mouse = get_global_mouse_position()
+		drop._set_position(mouse.x, %spawn.position.y)
+		get_parent().add_child(drop)
+		
+		print("nut dropped")
+		
+		nut_no = rng.randi_range(1,6)
+		"""
+		var nut_position = nut.position
+		nut_position.y = %spawn.position.y
+		nut_position.x = mouse.x
+		"""
