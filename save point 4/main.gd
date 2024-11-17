@@ -42,6 +42,7 @@ func _preview(a):
 	get_parent().add_child(sprite)
 
 var merge_counter = 0
+var Position
 func _merge(a):
 	a=a-1
 	print(a)
@@ -55,9 +56,13 @@ func _merge(a):
 		print("end game")
 func Merge():
 	var nut = nut_type.instantiate()
+	nut.position = Position
 	get_parent().add_child(nut)
 	nut.connect("merge",_merge)
+	nut.connect("_position",Set)
 	merge_counter = 0
+func Set(value):
+	Position = value
 
 func _physics_process(_delta):
 	_preview(nut_no)
@@ -74,6 +79,7 @@ func _physics_process(_delta):
 		get_parent().add_child(nut)
 #		for some reason if i delete the get parent from the line above the nuts wont despawn. weird
 		nut.connect("merge", _merge)
+		nut.connect("_position",Set)
 		
 		print("nut dropped")
 		
