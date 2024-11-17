@@ -8,6 +8,7 @@ const Name = "almond"
 func _collided(body):
 	var nut = body.get_parent()
 	if Name in nut.Name:
+		emit_signal("_position",position)
 		emit_signal("merge",no)
 		queue_free()
 
